@@ -1,0 +1,13 @@
+#!/usr/bin/env python
+
+from ultelnet import UlTelnet
+
+
+def main():
+    tel = UlTelnet()
+    tel.open("c64")
+    tel.run_disk("print shop.d64")
+
+
+if __name__ == "__main__":
+    main()
