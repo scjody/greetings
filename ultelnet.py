@@ -29,9 +29,7 @@ class UlTelnet:
         Enters the USB disk.
         Assumes that we're at the main menu.
         """
-        loc = self.find_on_screen("USB DISK")
-        for _ in range(0, loc - 3):
-            self.ult.send(KEY_DOWN)
+        self.down_to_string("USB DISK", 3)
         self.expect_white_text("USB DISK")
 
         self.ult.sendcontrol('m')
@@ -46,9 +44,7 @@ class UlTelnet:
         self.enter_usb()
 
         self.expect_screen_draw()
-        loc = self.find_on_screen(image_name)
-        for _ in range(0, loc - 3):
-            self.ult.send(KEY_DOWN)
+        self.down_to_string(image_name, 3)
         self.ult.sendcontrol('m')
         self.ult.send(KEY_DOWN)
         self.ult.sendcontrol('m')
@@ -65,18 +61,14 @@ class UlTelnet:
         self.expect_screen_draw()
         self.enter_usb()
         self.expect_screen_draw()
-        loc = self.find_on_screen(dir_name)
-        for _ in range(0, loc - 3):
-            self.ult.send(KEY_DOWN)
+        self.down_to_string(dir_name, 3)
         self.ult.sendcontrol('m')
         self.ult.sendcontrol('m')
 
         self.action_software_iec()
 
         self.expect("Set dir. here")
-        loc = self.find_on_screen("Set dir. here")
-        for _ in range(0, loc - 10):
-            self.ult.send(KEY_DOWN)
+        self.down_to_string("Set dir. here", 10)
         self.ult.sendcontrol('m')
 
         self.action_software_iec()
@@ -99,9 +91,7 @@ class UlTelnet:
         self.expect_screen_draw()
         self.send_esc_sequence('[15~')  # F5
         self.expect("Software IEC")
-        loc = self.find_on_screen("Software IEC")
-        for _ in range(0, loc - 8):
-            self.ult.send(KEY_DOWN)
+        self.down_to_string("Software IEC", 8)
         self.ult.sendcontrol('m')
 
     def expect(self, re):
@@ -150,6 +140,17 @@ class UlTelnet:
 
         self._troubleshoot()
         raise RuntimeError("'{}' not found on current screen".format(string))
+
+    def down_to_string(self, string, start_pos):
+        """
+        Scrolls down to the given string
+
+        :param string: string to scroll to
+        :param start_pos: starting screen line (1-based)
+        """
+        loc = self.find_on_screen(string)
+        for _ in range(0, loc - start_pos):
+            self.ult.send(KEY_DOWN)
 
     def send_esc_sequence(self, sequence):
         """
