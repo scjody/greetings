@@ -123,6 +123,13 @@ class UlTelnet:
         self.ult.expect(pexpect.TIMEOUT, timeout=1)
         self._feed()
 
+    def quit(self):
+        """
+        Quits the interface via ESC
+        """
+        self.ult.sendcontrol('[')
+        self.ult.expect(pexpect.EOF)
+
     def find_on_screen(self, string):
         """
         Finds the given string on the virtual screen

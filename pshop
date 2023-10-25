@@ -11,6 +11,7 @@ def main():
     print("loading print shop...")
     tel.run_disk("print shop.d64")
 
+    tel.quit()
 
 if __name__ == "__main__":
     main()
