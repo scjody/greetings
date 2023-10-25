@@ -13,6 +13,7 @@ class UlTelnet:
         self.screen = pyte.Screen(70, 24)
         self.stream = pyte.Stream(self.screen)
 
+        # Saved for debugging
         self.before = None
         self.after = None
 
@@ -23,12 +24,11 @@ class UlTelnet:
         """
         self.ult = pexpect.spawn("telnet {}".format(args))
 
-    def run_disk(self, image_name):
+    def enter_usb(self):
         """
-        Runs a disk image
-        :param image_name: name of the image to run, including extension
+        Enters the USB disk.
+        Assumes that we're at the main menu.
         """
-        self.expect_screen_draw()
         loc = self.find_on_screen("USB DISK")
         for _ in range(0, loc - 3):
             self.ult.send(KEY_DOWN)
@@ -37,6 +37,13 @@ class UlTelnet:
         self.ult.sendcontrol('m')
         self.ult.sendcontrol('m')
         self.expect("/Usb0/")
+
+    def run_disk(self, image_name):
+        """
+        Runs a disk image
+        :param image_name: name of the image to run, including extension
+        """
+        self.enter_usb()
 
         self.expect_screen_draw()
         loc = self.find_on_screen(image_name)
@@ -49,6 +56,53 @@ class UlTelnet:
         self.expect_screen_draw()
         self.ult.sendcontrol('[')
         self.consume_to_timeout()
+
+    def setup_printer(self, dir_name):
+        """
+        Sets up the virtual printer
+        :param dir_name: directory for print jobs (in root of Usb0), must exist
+        """
+        self.expect_screen_draw()
+        self.enter_usb()
+        self.expect_screen_draw()
+        loc = self.find_on_screen(dir_name)
+        for _ in range(0, loc - 3):
+            self.ult.send(KEY_DOWN)
+        self.ult.sendcontrol('m')
+        self.ult.sendcontrol('m')
+
+        self.action_software_iec()
+
+        self.expect("Set dir. here")
+        loc = self.find_on_screen("Set dir. here")
+        for _ in range(0, loc - 10):
+            self.ult.send(KEY_DOWN)
+        self.ult.sendcontrol('m')
+
+        self.action_software_iec()
+
+        self.ult.sendcontrol('m')
+        self.expect_screen_draw()
+        self.ult.sendcontrol('m')
+        self.expect_screen_draw()
+
+        self.send_esc_sequence('[D')   # left arrow
+        self.expect_screen_draw()
+        self.send_esc_sequence('[D')   # left arrow
+        self.send_esc_sequence('[5~')  # pgup
+        self.consume_to_timeout()
+
+    def action_software_iec(self):
+        """
+        Run the action menu and choose the "Software IEC" option
+        """
+        self.expect_screen_draw()
+        self.send_esc_sequence('[15~')  # F5
+        self.expect("Software IEC")
+        loc = self.find_on_screen("Software IEC")
+        for _ in range(0, loc - 8):
+            self.ult.send(KEY_DOWN)
+        self.ult.sendcontrol('m')
 
     def expect(self, re):
         """
@@ -82,6 +136,9 @@ class UlTelnet:
     def find_on_screen(self, string):
         """
         Finds the given string on the virtual screen
+
+        TODO: scroll down when string is not found
+
         :param string: string to find
         :return: location of the string as a line number starting from 1
         :raises RuntimeError if the string is not found
@@ -93,6 +150,14 @@ class UlTelnet:
 
         self._troubleshoot()
         raise RuntimeError("'{}' not found on current screen".format(string))
+
+    def send_esc_sequence(self, sequence):
+        """
+        Sends an escape sequence (ESC followed by a string)
+        :param sequence: sequence to send after ESC
+        """
+        self.ult.sendcontrol('[')
+        self.ult.send(sequence)
 
     def _feed(self):
         """

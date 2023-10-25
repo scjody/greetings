@@ -6,6 +6,9 @@ from ultelnet import UlTelnet
 def main():
     tel = UlTelnet()
     tel.open("c64")
+    print("setting up printer...")
+    tel.setup_printer("prints")
+    print("loading print shop...")
     tel.run_disk("print shop.d64")
 
 
