@@ -143,8 +143,17 @@ class UlTelnet:
         """
         Quits the interface via ESC
         """
-        self.ult.sendcontrol('[')
-        self.ult.expect(pexpect.EOF)
+        for _ in range(3):
+            self.ult.sendcontrol('[')
+            index = self.ult.expect([pexpect.EOF, pexpect.TIMEOUT], timeout=5)
+            self._feed()
+            if index == 0:
+                return
+            print("retrying quit")
+
+        print("failed to quit interface")
+        self._troubleshoot()
+
 
     def find_on_screen(self, string):
         """
