@@ -34,7 +34,7 @@ class UlFtp:
                     latest_n = n
                     latest_filename = filename
 
-        print("Retrieving {} to {}".format(latest_filename, tf.name))
+        print("  retrieving {} to {}".format(latest_filename, tf.name))
         self.ftp.retrbinary("RETR {}".format(latest_filename), tf.write)
 
         self.ftp.quit()

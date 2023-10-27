@@ -1,31 +1,7 @@
 #!/usr/bin/env python
 
-import subprocess
+from print import print_latest
 
-from ulftp import UlFtp
-from ultelnet import UlTelnet
-
-
-def main():
-    ADDR = "c64"
-
-    tel = UlTelnet()
-    tel.open(ADDR)
-    ftp = UlFtp()
-    ftp.open(ADDR)
-
-    print("flushing print job...")
-    tel.flush_printer()
-
-    print("getting printer file...")
-    path = ftp.get_latest()
-
-    subprocess.run(["imgcat", path])
-
-    # TODO: transform image
-    # TODO: print!
-
-    tel.quit()
 
 if __name__ == "__main__":
-    main()
+    print_latest()
