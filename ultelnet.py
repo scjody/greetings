@@ -84,6 +84,22 @@ class UlTelnet:
         self.send_esc_sequence('[5~')  # pgup
         self.consume_to_timeout()
 
+    def flush_printer(self):
+        """
+        Flush the printer
+        """
+        self.expect_screen_draw()
+        self.send_esc_sequence('[15~')  # F5
+        self.expect("Printer")
+        self.down_to_string("Printer", 8)
+        self.ult.sendcontrol('m')
+
+        self.expect("Flush/Eject")
+        self.ult.sendcontrol('m')
+
+        self.consume_to_timeout()
+        self.ult.sendcontrol('[')
+
     def action_software_iec(self):
         """
         Run the action menu and choose the "Software IEC" option
