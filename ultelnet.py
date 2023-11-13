@@ -100,6 +100,19 @@ class UlTelnet:
         self.consume_to_timeout()
         self.ult.sendcontrol('[')
 
+    def update_firmware(self, filename):
+        """
+        Update firmware
+        :param filename: filename, must exist in Usb0 root
+        """
+        self.expect_screen_draw()
+        self.enter_usb()
+
+        self.expect_screen_draw()
+        self.down_to_string(filename, 3)
+        self.ult.sendcontrol('m')
+        self.ult.sendcontrol('m')
+
     def action_software_iec(self):
         """
         Run the action menu and choose the "Software IEC" option

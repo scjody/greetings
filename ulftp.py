@@ -40,3 +40,16 @@ class UlFtp:
         self.ftp.quit()
 
         return tf.name
+
+    def send(self, filepath, filename):
+        """
+        Sends the given file to /Usb0 root
+        :param filepath: path to local file
+        :param filename: remote filename
+        """
+        self.ftp.cwd("/Usb0")
+        fp = open(filepath, 'rb')
+
+        self.ftp.storbinary("STOR {}".format(filename), fp)
+
+        self.ftp.quit()
