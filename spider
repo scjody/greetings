@@ -20,6 +20,7 @@ def main():
     while True:
         wait_for_pin(pin, True)
         print_latest()
+        time.sleep(15)
         wait_for_pin(pin, False)
         print("the spider 🕷  is ready to print AGAIN...")
 
