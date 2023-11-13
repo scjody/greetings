@@ -18,7 +18,6 @@ class UlFtp:
 
         :return: path to the tempfile
         """
-        tf = NamedTemporaryFile(suffix=".png", delete=False, dir=dir)
         self.ftp.cwd("/Usb0")
 
         latest_n = 0
@@ -34,6 +33,7 @@ class UlFtp:
                     latest_n = n
                     latest_filename = filename
 
+        tf = NamedTemporaryFile(suffix=".png", delete=False, dir=dir)
         print("  retrieving {} to {}".format(latest_filename, tf.name))
         self.ftp.retrbinary("RETR {}".format(latest_filename), tf.write)
 
