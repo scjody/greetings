@@ -10,6 +10,9 @@ class UlFtp:
         self.ftp = FTP(addr)
         self.ftp.login()
 
+    def quit(self):
+        self.ftp.quit()
+
     def get_latest_printer_file(self, dir=None):
         """
         Gets the latest printer file from the U2 to a tempfile in the given directory
@@ -37,8 +40,6 @@ class UlFtp:
         print("  retrieving {} to {}".format(latest_filename, tf.name))
         self.ftp.retrbinary("RETR {}".format(latest_filename), tf.write)
 
-        self.ftp.quit()
-
         return tf.name
 
     def get_file(self, filename):
@@ -50,8 +51,6 @@ class UlFtp:
         tf = open(filename, "wb")
         self.ftp.retrbinary("RETR {}".format(filename), tf.write)
 
-        self.ftp.quit()
-
     def send(self, filepath, filename):
         """
         Sends the given file to /Usb0 root
@@ -62,5 +61,3 @@ class UlFtp:
         fp = open(filepath, 'rb')
 
         self.ftp.storbinary("STOR {}".format(filename), fp)
-
-        self.ftp.quit()

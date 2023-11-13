@@ -19,6 +19,8 @@ def main():
     print("starting update...")
     tel.update_firmware(FILENAME)
 
+    # No need to quit - we're rebooting!
+
 
 if __name__ == "__main__":
     main()

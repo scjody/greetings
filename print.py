@@ -23,8 +23,9 @@ def print_latest():
     print("folding space and time...")
     # TODO: transform image
 
-    print("printing with laser eyes...")
-    # TODO: print!
+    print("printing with lasers...")
+    #subprocess.run(["lpr", path])
 
+    ftp.quit()
     tel.quit()
 

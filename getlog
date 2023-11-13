@@ -19,6 +19,7 @@ def main():
     print("downloading...")
     ftp.get_file("{}.log".format(FILENAME))
 
+    ftp.quit()
     tel.quit()
 
 if __name__ == "__main__":
