@@ -41,6 +41,17 @@ class UlFtp:
 
         return tf.name
 
+    def get_file(self, filename):
+        """
+        Gets the given file from /Usb0, and saves to the current local directory
+        :param filename: filename, including extension
+        """
+        self.ftp.cwd("/Usb0")
+        tf = open(filename, "wb")
+        self.ftp.retrbinary("RETR {}".format(filename), tf.write)
+
+        self.ftp.quit()
+
     def send(self, filepath, filename):
         """
         Sends the given file to /Usb0 root

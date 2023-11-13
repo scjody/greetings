@@ -113,6 +113,28 @@ class UlTelnet:
         self.ult.sendcontrol('m')
         self.ult.sendcontrol('m')
 
+    def save_debug_log(self, filename):
+        """
+        Saves a debug log
+        :param filename: filename to use, no extension
+        """
+        self.expect_screen_draw()
+        self.enter_usb()
+
+        self.expect_screen_draw()
+        self.send_esc_sequence('[15~')  # F5
+        self.expect("Developer")
+        self.down_to_string("Developer", 8)
+        self.ult.sendcontrol('m')
+
+        self.expect("Save Debug Log")
+        self.down_to_string("Save Debug Log", 14)
+        self.ult.sendcontrol('m')
+
+        self.expect("Give filename")
+        self.ult.send(filename)
+        self.ult.sendcontrol('m')
+
     def action_software_iec(self):
         """
         Run the action menu and choose the "Software IEC" option

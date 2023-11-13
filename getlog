@@ -1,0 +1,25 @@
+#!/usr/bin/env python
+
+from ulftp import UlFtp
+from ultelnet import UlTelnet
+
+ADDR = "c64"
+FILENAME = "a"
+
+
+def main():
+    tel = UlTelnet()
+    tel.open(ADDR)
+    ftp = UlFtp()
+    ftp.open(ADDR)
+
+    print("saving debug log...")
+    tel.save_debug_log(FILENAME)
+
+    print("downloading...")
+    ftp.get_file("{}.log".format(FILENAME))
+
+    tel.quit()
+
+if __name__ == "__main__":
+    main()
