@@ -16,7 +16,7 @@ def print_latest():
     tel.flush_printer()
 
     print("getting printer file...")
-    path = ftp.get_latest("/Users/scjody/Downloads/prints")
+    path = ftp.get_latest_printer_file("/Users/scjody/Downloads/prints")
 
     subprocess.run(["imgcat", path])
 

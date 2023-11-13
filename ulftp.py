@@ -10,7 +10,7 @@ class UlFtp:
         self.ftp = FTP(addr)
         self.ftp.login()
 
-    def get_latest(self, dir=None):
+    def get_latest_printer_file(self, dir=None):
         """
         Gets the latest printer file from the U2 to a tempfile in the given directory
 
