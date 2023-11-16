@@ -53,6 +53,23 @@ class UlTelnet:
         self.ult.sendcontrol('[')
         self.consume_to_timeout()
 
+    def mount_disk_on_b(self, image_name):
+        """
+        Mounts a disk image on drive B
+        Note that as a side effect of this, the telnet connection will be closed.
+        :param image_name: name of image to mount, including extension
+        """
+        self.enter_usb()
+
+        self.expect_screen_draw()
+        self.down_to_string(image_name, 3)
+        self.ult.sendcontrol('m')
+
+        self.expect("Mount Disk on B")
+        self.down_to_string("Mount Disk on B", 8)
+        self.ult.sendcontrol('m')
+        self.consume_to_timeout()
+
     def setup_printer(self, dir_name):
         """
         Sets up the virtual printer
@@ -183,6 +200,7 @@ class UlTelnet:
             index = self.ult.expect([pexpect.EOF, pexpect.TIMEOUT], timeout=5)
             self._feed()
             if index == 0:
+                self.__init__()
                 return
             print("retrying quit")
 
