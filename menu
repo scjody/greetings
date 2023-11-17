@@ -1,0 +1,81 @@
+#!/usr/bin/env python
+
+import inspect
+import time
+
+import pyfirmata
+
+from programs import load_print_shop, load_print_master
+from print import print_latest
+
+
+def main():
+    board = pyfirmata.util.get_the_board(identifier="tty.usbmodem")
+
+    it = pyfirmata.util.Iterator(board)
+    it.start()
+
+    spider = board.get_pin("d:3:i")
+    tiger = board.get_pin("d:4:i")
+    turtle = board.get_pin("d:5:i")
+
+    while True:
+        show_menu()
+
+        pin = wait_for_pin([spider, tiger, turtle], True)
+
+        if pin == spider:
+            print_latest()
+        elif pin == tiger:
+            print(inspect.cleandoc('''
+               RAWR! 🐅
+               The computer will reset and load PRINT SHOP!
+               Keep holding the tiger button if you want this!
+            '''))
+            time.sleep(4)  # Intentionally shorter timeout than Print Master
+            if pin.read() == True:
+                load_print_shop()
+            else:
+                print("🐅 tigers need hugs, try again")
+        elif pin == turtle:
+            print(inspect.cleandoc('''
+               flelelele! 🐢
+               The computer will reset and load PRINT MASTER!
+               Keep holding the turtle button if you want this!
+            '''))
+            time.sleep(5)
+            if pin.read() == True:
+                load_print_master()
+            else:
+                print("🐢 turtles need bugs, try again")
+
+        wait_for_pin([pin], False)
+
+
+def show_menu():
+    print()
+    print(inspect.cleandoc('''
+        MAIN MENU
+        ~~~~~~~~~
+        🕷  PRINT latest creation
+        🐅 Load Print Shop
+        🐢 Load Print Master
+    '''))
+    print()
+
+def wait_for_pin(pins, status):
+    """
+    Waits for any of the given pins to reach the given status
+    :param pins: list of pins from board.get_pin (must be digital inputs)
+    :param status: boolean status to wait for
+    :return: first pin to reach the given status
+    """
+    while True:
+        for pin in pins:
+            if pin.read() == status:
+                return pin
+        time.sleep(0.1)
+
+
+if __name__ == "__main__":
+    main()
