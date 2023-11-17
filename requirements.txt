@@ -7,3 +7,4 @@ pyte==0.8.1
 virtualenv==20.24.5
 wcwidth==0.2.8
 pyFirmata==1.1.0
+Pillow==10.1.0
