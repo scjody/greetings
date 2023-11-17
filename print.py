@@ -1,5 +1,6 @@
 import os
 import subprocess
+import time
 
 from PIL import Image
 
@@ -33,6 +34,9 @@ def print_latest():
 
     ftp.quit()
     tel.quit()
+
+    time.sleep(15)
+    print("done printing...")
 
 
 def transform(fn, new_fn):
