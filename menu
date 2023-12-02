@@ -10,6 +10,8 @@ from print import print_latest
 
 
 def main():
+    print("Please wait while your call is connected...")
+
     board = pyfirmata.util.get_the_board(identifier="tty.usbmodem")
 
     it = pyfirmata.util.Iterator(board)
@@ -58,7 +60,7 @@ def show_menu():
         MAIN MENU
         ~~~~~~~~~
         🕷  PRINT latest creation
-        🐅 Load Print Shop
+        🐅 Load Print Shop (fastest, easiest)
         🐢 Load Print Master
     '''))
     print()
